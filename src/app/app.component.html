@@ -1,0 +1,7 @@
+<div style="text-align:center">
+  <h1>
+    Welcome to {{ title }}!
+  </h1>
+  <button (click)="getToken()">Get Token</button>
+  <p *ngIf="token">Token: {{ token }}</p>
+</div>
