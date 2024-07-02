@@ -1,21 +1,16 @@
 // Setup imports
 const express = require("express");
 const cors = require("cors");
-const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 const { doubleCsrf } = require("csrf-csrf");
-const { ClientSecretCredential } = require("@azure/identity");
 const logger = require("./logger");
 const expressWinston = require("express-winston");
-
-// Load environment variables
-dotenv.config();
 
 const {
   doubleCsrfProtection, // This is the default CSRF protection middleware.
   generateToken,        // Generate CSRF tokens
 } = doubleCsrf({
-  getSecret: () => process.env.CSRF_SECRET, // A function that optionally takes the request and returns a secret
+  getSecret: () => 'f9hBPxPvhZy2TQRzamQZpq3BLFXUBCpDLBD3maq3FoGjTFdPe1laxDTmikJiddOu', // A function that optionally takes the request and returns a secret
   cookieName: "__Host-psifi.x-csrf-token", // The name of the cookie to be used, recommend using Host prefix.
   size: 64, // The size of the generated tokens in bits
   getTokenFromRequest: (req) => req.headers["x-csrf-token"], // A function that returns the token from the request
@@ -26,19 +21,10 @@ const app = express();
 
 // Enable CORS
 const corsOptions = {
-  origin: process.env.EC_FRONTEND_URL,
+  origin: 'http://localhost:4200',
   credentials: true,
   optionsSuccessStatus: 200,
 };
-
-// Get the environment variables
-const tenantId = process.env.TENANT_ID;
-const clientId = process.env.CLIENT_ID;
-const clientSecret = process.env.CLIENT_SECRET;
-const clientResource = process.env.CLIENT_RESOURCE;
-
-// Create the credentials object
-const credential = new ClientSecretCredential(tenantId, clientId, clientSecret);
 
 // Enable cookie parsing to read CSRF token from cookie
 app.use(cors(corsOptions));
@@ -79,15 +65,14 @@ router.get("/csrf-token", (req, res) => {
 
 // API endpoint to get the OAuth2 token
 router.post("/oauth/token", doubleCsrfProtection, async (req, res) => {
-  const token = await credential.getToken(clientResource);
-  res.json(token);
+  res.json({ token: 'fake-token' });
 });
 
 app.use(doubleCsrfProtection);
 app.use("/api", router);
 
 // Define the port
-const port = process.env.EXPRESS_PORT || 3000;
+const port = 3000;
 
 // Start the server
 app.listen(port, () => {
