@@ -28,7 +28,7 @@ const corsOptions = {
 
 // Enable cookie parsing to read CSRF token from cookie
 app.use(cors(corsOptions));
-app.use(cookieParser(process.env.COOKIE_PARSER_SECRET));
+app.use(cookieParser("zTJAMljnVbFjoCUEDUIjvNbzSmlYf9X2RaOphoFljH0ssm7KF8wZesHXhjLHOWsN"));
 app.use(express.json());
 
 // Middleware to log all requests
